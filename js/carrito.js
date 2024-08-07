@@ -149,9 +149,19 @@ function finalizarCompra() {
   `;
 
   document.getElementById("contenido").innerHTML = contenidoHTML;
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="spinner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  `);
 
   document.getElementById("formEnvio").addEventListener("submit", function(event) {
     event.preventDefault();
+
+    // Mostrar spinner
+    document.getElementById("spinner").style.display = "block";
 
     const datosEnvio = {
       nombre: document.getElementById("nombre").value,
@@ -160,17 +170,28 @@ function finalizarCompra() {
       celular: document.getElementById("celular").value
     };
 
-    localStorage.setItem("datosEnvio", JSON.stringify(datosEnvio));
-
-    Swal.fire({
-      title: 'Compra realizada con éxito',
-      text: '¡Gracias por elegirnos!',
-      icon: 'success',
-      confirmButtonText: 'Aceptar'
+    new Promise((resolve) => {
+      setTimeout(() => {
+        localStorage.setItem("datosEnvio", JSON.stringify(datosEnvio));
+        resolve();
+      }, 2000); // Simula un retraso de 2 segundos
     }).then(() => {
+      document.getElementById("spinner").style.display = "none";
+
+      // Mostrar mensaje de éxito
+      Swal.fire({
+        title: 'Compra realizada con éxito',
+        text: '¡Gracias por elegirnos!',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
       vaciarCarrito();
+
+      // Eliminar spinner del DOM
+      document.getElementById("spinner").remove();
     });
   });
 }
 
-renderCarrito();
+renderCarrito(); 
+

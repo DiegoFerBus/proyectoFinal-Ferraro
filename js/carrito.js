@@ -174,7 +174,7 @@ function finalizarCompra() {
       setTimeout(() => {
         localStorage.setItem("datosEnvio", JSON.stringify(datosEnvio));
         resolve();
-      }, 2000); // Simula un retraso de 2 segundos
+      }, 5000); // Simula un retraso de 2 segundos
     }).then(() => {
       document.getElementById("spinner").style.display = "none";
 
